@@ -4,6 +4,16 @@ import { theme } from "./Theme";
 
 export const GlobalStyle = createGlobalStyle`
 	${reset}
+	a {
+		color: ${theme.colors.textDefault};
+		text-decoration: none;
+	}
+	.for-a11y {
+		height: 0;
+		font-size: 0;
+		text-indent: -9999px;
+		overflow: hidden;
+	}
 `;
 
 export const BoxWrap = styled.div`
@@ -13,12 +23,8 @@ export const BoxWrap = styled.div`
 `;
 
 export const BoxInner = styled.div`
-	width: 1400px;
+	width: 900px;
 	margin: 0 auto;
-	@media ${theme.device.desktop_s}{
-		width: 94%;
-		background: blue;
-	}
 	@media ${theme.device.tablet}{
 		width: 94%;
 		background: purple;
