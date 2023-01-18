@@ -25,7 +25,7 @@ export const GlobalStyle = createGlobalStyle`
 	}
 	
 	${reset}
-	* {
+	html, body, div, span, h1, h2, h3, h4, h5, h6, p, * {
 		padding: 0;
 		font-family: "cookie";
 		font-weight: 400;

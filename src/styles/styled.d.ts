@@ -13,6 +13,3 @@ declare module "styled-components" {
     };
   }
 }
-
-// fonts.d.ts
-declare module "*.ttf";

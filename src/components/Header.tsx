@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { BoxInner, InnerStyle } from "../styles/GlobalStyle";
+import { BoxInner } from "../styles/GlobalStyle";
 import { theme } from "../styles/Theme";
 import { Navigation } from "./Navigation";
 import IconSearch from "../assets/image/icon__search.png";
 import IconArrow from "../assets/image/icon__arrow.png";
+import { Layer } from "./Layer";
+
 export const Header = () => {
 	const BoxHeader = styled.header`
 		position: relative;
@@ -70,17 +72,72 @@ export const Header = () => {
 		}
 	`;
 
+	const AreaUl = styled.ul`
+		display: flex;
+		flex-wrap: wrap;
+	`;
+	interface areaNum {
+		idx: number
+	}
+	const AreaItem = styled.li<areaNum>`
+		position: relative;
+		width: calc(50% - 8px);
+		max-width: 170px;
+		padding: 10px;
+		margin-top: 16px; 
+		margin-right: 16px;
+		border-radius: 8px;
+		border: 1px solid #e5e5e5;
+		box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+		text-align: center;
+		&:nth-child(even) {
+			margin-right: 0;
+		}
+		&:nth-child(-n+2) {
+			margin-top: 0;
+		}
+		.box__icon {
+			width: 100%;
+			height: 150px;
+			background: url("./assets/icon__area${props=>props.idx+1}.png") no-repeat center / cover;
+		}
+		.text {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			font-size: 20px;
+			font-weight: 900;
+			transform: translate(-50%, -50%);
+		}
+	`;
+
+	const areaData = ["강남구", "강동구","광진구", "강북구", "강서구", "관악구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"];
+
+	const areaItemList = areaData.map((item, idx)=>{
+		return(
+			<AreaItem key={idx} idx={idx}>
+				<p className="box__icon"></p>
+				<p className="text">{item}</p>
+			</AreaItem>
+		)
+	});
+	const dataArea = <AreaUl>{areaItemList}</AreaUl>
+
 	return (
-		<BoxHeader>
-			<BoxInner>
-				<ButtonArea>지역 선택</ButtonArea>
-				<Navigation />
-			</BoxInner>
+		<>
+			<BoxHeader>
+				<BoxInner>
+					<ButtonArea>지역 선택</ButtonArea>
+					<Navigation />
+				</BoxInner>
+				
+				<BoxSearch>
+					<input type="text" placeholder="상품명, 마트명 입력"/>
+					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
+				</BoxSearch>
+			</BoxHeader>
 			
-			<BoxSearch>
-				<input type="text" placeholder="상품명, 마트명 입력"/>
-				<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
-			</BoxSearch>
-		</BoxHeader>
+			<Layer open={true} headTitle="지역 선택" content={dataArea}/>
+		</>
 	)
 }
