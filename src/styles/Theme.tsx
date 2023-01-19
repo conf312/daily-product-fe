@@ -9,6 +9,7 @@ const deviceSize = {
 export const theme: DefaultTheme = {
   colors: {
     textDefault: "#666",
+    pointColor: "#654296"
   },
   device: {
     mobile: `(max-width:${deviceSize.mobile})`,

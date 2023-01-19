@@ -4,6 +4,7 @@ declare module "styled-components" {
   export interface DefaultTheme {
     colors: {
       textDefault: string;
+      pointColor: string;
     };
     device: {
       mobile: string;
