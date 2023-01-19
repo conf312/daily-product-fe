@@ -1,6 +1,8 @@
 import { BrowserRouter,Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Home } from './page/Home';
+import { Join } from './page/Join';
+import { Login } from './page/Login';
 import { BoxWrap } from './styles/GlobalStyle';
 
 function App() {
@@ -11,6 +13,8 @@ function App() {
         <div id="cBody">
           <Routes>
             <Route index path="/" element={<Home />} />
+            <Route index path="/login" element={<Login />} />
+            <Route index path="/join" element={<Join />} />
           </Routes>
         </div>
       </BoxWrap>

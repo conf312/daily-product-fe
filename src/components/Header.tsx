@@ -60,9 +60,6 @@ export const Header = () => {
 		margin: 20px auto 0;
 		border-radius: 8px;
 		box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-		input[type="text"] {
-			border-radius: 8px;
-		}
 		.button__search {
 			position: absolute;
 			top: calc(50% - 20px);
