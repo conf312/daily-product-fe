@@ -72,7 +72,7 @@ export const Home = () => {
 			<BoxCategory>
 				{dummyProduct.map((item, idx)=>{
 					return(
-						<ButtonCategory category="product">
+						<ButtonCategory category="product" key={idx}>
 							<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
 							<p className="text">{item}</p>
 						</ButtonCategory>							

@@ -5,6 +5,7 @@ import { Navigation } from "./Navigation";
 import IconSearch from "../assets/image/icon__search.png";
 import IconArrow from "../assets/image/icon__arrow.png";
 import { Layer } from "./Layer";
+import { useState } from "react";
 
 export const Header = () => {
 	const BoxHeader = styled.header`
@@ -123,11 +124,21 @@ export const Header = () => {
 	});
 	const dataArea = <AreaUl>{areaItemList}</AreaUl>
 
+	const [open, setOpen] = useState(false);
+
+	const openLayerEvent = () => {
+		setOpen(true);
+	}
+
+	const closeLayerEvent = () => {
+		setOpen(false);
+	}
+
 	return (
 		<>
 			<BoxHeader>
 				<BoxInner>
-					<ButtonArea>지역 선택</ButtonArea>
+					<ButtonArea onClick={openLayerEvent}>지역 선택</ButtonArea>
 					<Navigation />
 				</BoxInner>
 				
@@ -137,7 +148,7 @@ export const Header = () => {
 				</BoxSearch>
 			</BoxHeader>
 			
-			<Layer open={true} headTitle="지역 선택" content={dataArea}/>
+			<Layer open={open} headTitle="지역 선택" content={dataArea} closeLayerEvent={closeLayerEvent}/>
 		</>
 	)
 }

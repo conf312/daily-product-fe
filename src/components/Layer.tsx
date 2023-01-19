@@ -7,15 +7,18 @@ interface layerType {
   type?: string;
   headTitle?: string;
   content?: ReactNode;
+  closeLayerEvent: React.MouseEventHandler<HTMLButtonElement>;
 }
 interface layerStyleType {
   type?: string;
 }
+
 export const Layer = (props:layerType) => {
   const BoxDimmed = styled.div`
     position: fixed;
     top: 0;
     left: 0;
+    display: ${props.open?"block":"none"};
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.6);
@@ -25,10 +28,12 @@ export const Layer = (props:layerType) => {
     position: absolute;
     top: ${props=>props.type?"50%":"0"};
     left: ${props=>props.type?"50%":"0"};
+    display: flex;
     width: 100%;
     height: 100%;
     background: #fff;
     transform: ${props=>props.type?"translate(-50% -50%)":null};
+    flex-direction: column;
   `;
   const BoxHead = styled.div`
     position: relative;
@@ -54,6 +59,7 @@ export const Layer = (props:layerType) => {
     height: 30px;
     background: url(${IconClose}) no-repeat center / 100%;
   `;
+
   return (
     <BoxDimmed>
       <BoxLayer type={props.type}>
@@ -61,7 +67,7 @@ export const Layer = (props:layerType) => {
           <>
             <BoxHead>
               <h3 className="text__layer-head">{props.headTitle}</h3>
-              <ButtonClose><span className="for-a11y">{props.open?"닫기":"열기"}</span></ButtonClose>
+              <ButtonClose onClick={props.closeLayerEvent}><span className="for-a11y">{props.open?"닫기":"열기"}</span></ButtonClose>
             </BoxHead>
             <BoxContent>{props.content}</BoxContent>
           </>
