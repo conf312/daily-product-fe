@@ -8,7 +8,28 @@ import { Layer } from "./Layer";
 import { useState } from "react";
 
 export const Header = () => {
+<<<<<<< Updated upstream
 	const BoxHeader = styled.header`
+=======
+	const locationPath = useLocation().pathname;
+	let titleH2 = "";
+	if(locationPath === "/login"){
+		titleH2 = "로그인";
+	}else if(locationPath === "/join"){
+		titleH2 = "회원가입";
+	}else if(locationPath === "/faq"){
+		titleH2 = "자주 묻는 질문"
+	}else if(locationPath === "/like"){
+		titleH2 = "찜하기"
+	}else if(locationPath === "/terms"){
+		titleH2 = "정보제공처"
+	}
+
+	interface headerType{
+		type?: string;
+	}
+	const BoxHeader = styled.header<headerType>`
+>>>>>>> Stashed changes
 		position: relative;
 		padding: 20px 0;
 		z-index: 10;
@@ -35,6 +56,17 @@ export const Header = () => {
 			@media ${theme.device.mobile} {
 				padding: 0;	
 			}
+
+			.title__h2 {
+				font-size: 20px;
+				font-weight: 700;
+				color: #fff;
+				line-height: 36px;
+			}
+		}
+
+		& + #cBody {
+			padding-top: ${props=> props.type!=="sub"?"":"40px"};
 		}
 	`;
 
@@ -135,6 +167,7 @@ export const Header = () => {
 	}
 
 	return (
+<<<<<<< Updated upstream
 		<>
 			<BoxHeader>
 				<BoxInner>
@@ -147,8 +180,26 @@ export const Header = () => {
 					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
 				</BoxSearch>
 			</BoxHeader>
+=======
+		<BoxHeader type={locationPath!=="/"?"sub":""}>
+			<BoxInner>
+				{locationPath !== "/"?
+					<h2 className="title__h2">{titleH2}</h2>
+					:
+					<ButtonArea onClick={openLayerEvent}>지역 선택</ButtonArea>
+				}
+
+				<Navigation />
+			</BoxInner>
+>>>>>>> Stashed changes
 			
+			{locationPath !== "/"? null:
+				<BoxSearch>
+					<input type="text" placeholder="상품명, 마트명 입력" />
+					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
+				</BoxSearch>
+			}
 			<Layer open={open} headTitle="지역 선택" content={dataArea} closeLayerEvent={closeLayerEvent}/>
-		</>
+		</BoxHeader>
 	)
 }

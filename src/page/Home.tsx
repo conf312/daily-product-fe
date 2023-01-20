@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { List } from "../components/List";
 import { BoxInner } from "../styles/GlobalStyle"
 import { theme } from "../styles/Theme";
 
@@ -59,26 +60,29 @@ export const Home = () => {
 	
 	return (
 		<BoxInner>
-			<BoxCategory>
-				<ButtonCategory>
-					<p className="box__icon"><img src="./assets/icon__store1.png" alt="" /></p>
-					<p className="text">시장</p>
-				</ButtonCategory>
-				<ButtonCategory>
-					<p className="box__icon"><img src="./assets/icon__store2.png" alt="" /></p>
-					<p className="text">시장</p>
-				</ButtonCategory>
-			</BoxCategory>		
-			<BoxCategory>
-				{dummyProduct.map((item, idx)=>{
-					return(
-						<ButtonCategory category="product" key={idx}>
-							<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
-							<p className="text">{item}</p>
-						</ButtonCategory>							
-					)
-				})}
-			</BoxCategory>
+			<>
+				<BoxCategory>
+					<ButtonCategory>
+						<p className="box__icon"><img src="./assets/icon__store1.png" alt="" /></p>
+						<p className="text">시장</p>
+					</ButtonCategory>
+					<ButtonCategory>
+						<p className="box__icon"><img src="./assets/icon__store2.png" alt="" /></p>
+						<p className="text">시장</p>
+					</ButtonCategory>
+				</BoxCategory>		
+				<BoxCategory>
+					{dummyProduct.map((item, idx)=>{
+						return(
+							<ButtonCategory category="product" key={idx}>
+								<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
+								<p className="text">{item}</p>
+							</ButtonCategory>							
+						)
+					})}
+				</BoxCategory>
+			</>
+			<List/>
 		</BoxInner>
 	)
 }

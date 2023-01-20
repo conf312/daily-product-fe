@@ -49,6 +49,7 @@ export const GlobalStyle = createGlobalStyle`
 		border: 1px solid #e5e5e5;
 		border-radius: 4px;
 		@media ${theme.device.mobile}{
+			height: 48px;
 			font-size: 14px;
 		}
 	} 
