@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import styled from "styled-components"
 import IconClose from "../assets/image/icon__close.png";
+import { theme } from "../styles/Theme";
 
 interface layerType {
   open: boolean;
@@ -26,14 +27,25 @@ export const Layer = (props:layerType) => {
   `;
   const BoxLayer = styled.div<layerStyleType>`
     position: absolute;
-    top: ${props=>props.type?"50%":"0"};
-    left: ${props=>props.type?"50%":"0"};
+    top: 50%;
+    left: 50%;
     display: flex;
-    width: 100%;
-    height: 100%;
+    width: ${props=>props.type?"auto":"450px"};
+    height: auto;
+    max-height: calc(100vh - 200px);
     background: #fff;
-    transform: ${props=>props.type?"translate(-50% -50%)":null};
+    border-radius: 20px;
+    transform: translate(-50%, -50%);
     flex-direction: column;
+    @media ${theme.device.mobile} {
+      top: ${props=>props.type?"50%":"0"};
+      left: ${props=>props.type?"50%":"0"};
+      width: ${props=>props.type?"auto":"100%"};
+      height: ${props=>props.type?"auto":"100%"};
+      max-height: 100%;
+      border-radius: ${props=>props.type?"20px":"0"};
+      transform: ${props=>props.type?"translate(-50%, -50%)":"translate(0, 0)"};
+    }
   `;
   const BoxHead = styled.div`
     position: relative;

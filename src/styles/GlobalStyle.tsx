@@ -71,6 +71,9 @@ export const GlobalStyle = createGlobalStyle`
 	#cBody {
 		padding-bottom: 40px;;
 	}
+	.scroll-lock {
+		overflow: hidden;
+	}
 `;
 
 export const BoxWrap = styled.div`

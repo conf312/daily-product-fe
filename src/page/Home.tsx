@@ -42,8 +42,8 @@ export const Home = () => {
 				padding: ${props=>props.category==="product"?"15px":""};
 				margin-bottom: 5px;
 				img{
-					width: 30px;
-					height: 30px;
+					width: ${props=>props.category==="product"?"30px":""};
+					height: ${props=>props.category==="product"?"30px":""};
 				}
 			}
 		}
