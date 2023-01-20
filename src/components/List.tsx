@@ -1,8 +1,9 @@
+
+import { useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/Theme";
-import iconAlign from "../assets/image/icon__align.png";
 import { Layer } from "./Layer";
-import { useState } from "react";
+import iconAlign from "../assets/image/icon__align.png";
 
 export const List = () => {
 	const BoxSummary = styled.div`

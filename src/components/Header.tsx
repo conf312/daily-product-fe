@@ -1,16 +1,16 @@
+
+import { useState } from "react";
+import { useLocation } from "react-router";
 import styled from "styled-components";
-import { BoxInner } from "../styles/GlobalStyle";
 import { theme } from "../styles/Theme";
+import { BoxInner } from "../styles/GlobalStyle";
 import { Navigation } from "./Navigation";
+import { Layer } from "./Layer";
 import IconSearch from "../assets/image/icon__search.png";
 import IconArrow from "../assets/image/icon__arrow.png";
-import { Layer } from "./Layer";
-import { useState } from "react";
+
 
 export const Header = () => {
-<<<<<<< Updated upstream
-	const BoxHeader = styled.header`
-=======
 	const locationPath = useLocation().pathname;
 	let titleH2 = "";
 	if(locationPath === "/login"){
@@ -29,7 +29,6 @@ export const Header = () => {
 		type?: string;
 	}
 	const BoxHeader = styled.header<headerType>`
->>>>>>> Stashed changes
 		position: relative;
 		padding: 20px 0;
 		z-index: 10;
@@ -37,7 +36,7 @@ export const Header = () => {
 			content: "";
 			display: block;
 			position: absolute;
-			top: -50px;
+			top: ${props=> props.type!=="sub"?"-50px":"0"};
 			left: 0;
 			width: 100%;
 			height: 100%;
@@ -108,6 +107,7 @@ export const Header = () => {
 	const AreaUl = styled.ul`
 		display: flex;
 		flex-wrap: wrap;
+		justify-content: center;
 	`;
 	interface areaNum {
 		idx: number
@@ -115,7 +115,7 @@ export const Header = () => {
 	const AreaItem = styled.li<areaNum>`
 		position: relative;
 		width: calc(50% - 8px);
-		max-width: 170px;
+		max-width: 200px;
 		padding: 10px;
 		margin-top: 16px; 
 		margin-right: 16px;
@@ -167,20 +167,6 @@ export const Header = () => {
 	}
 
 	return (
-<<<<<<< Updated upstream
-		<>
-			<BoxHeader>
-				<BoxInner>
-					<ButtonArea onClick={openLayerEvent}>지역 선택</ButtonArea>
-					<Navigation />
-				</BoxInner>
-				
-				<BoxSearch>
-					<input type="text" placeholder="상품명, 마트명 입력"/>
-					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
-				</BoxSearch>
-			</BoxHeader>
-=======
 		<BoxHeader type={locationPath!=="/"?"sub":""}>
 			<BoxInner>
 				{locationPath !== "/"?
@@ -191,7 +177,6 @@ export const Header = () => {
 
 				<Navigation />
 			</BoxInner>
->>>>>>> Stashed changes
 			
 			{locationPath !== "/"? null:
 				<BoxSearch>

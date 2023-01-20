@@ -41,7 +41,8 @@ export const GlobalStyle = createGlobalStyle`
 	}
 	input[type="text"],
 	input[type="number"], 
-	input[type="tel"] {
+	input[type="tel"],
+	input[type="password"]{
 		width: 100%;
 		height: 58px;
 		padding: 0 12px; 
@@ -55,7 +56,8 @@ export const GlobalStyle = createGlobalStyle`
 	} 
 	input[type="text"]::placeholder, 
 	input[type="number"]::placeholder, 
-	input[type="tel"]::placeholder {
+	input[type="tel"]::placeholder,
+	input[type="password"]::placeholder {
 		color:#999;
 	}
 	.for-a11y {
@@ -63,6 +65,12 @@ export const GlobalStyle = createGlobalStyle`
 		height: 0;
 		font-size: 0;
 		text-indent: -9999px;
+		overflow: hidden;
+	}
+	#cBody {
+		padding-bottom: 40px;
+	}
+	.scroll-lock {
 		overflow: hidden;
 	}
 `;
@@ -83,4 +91,60 @@ export const InnerStyle = css`
 
 export const BoxInner = styled.div`
 	${InnerStyle};
+`;
+
+interface buttonProps {
+	bgColor?: string;
+	borderColor?: string;
+	textColor?: string;
+}
+export const ButtonItem = styled.button<buttonProps>`
+	display: inline-block;
+	min-height: 48px;
+	padding: 12px;
+	font-size: 16px;
+	color: ${props=>props.textColor?props.textColor:null};
+	background-color: ${props=>props.bgColor?props.bgColor:null};
+	border: 1px solid ${props=>props.borderColor?props.borderColor:null};
+	border-radius: 8px;
+	&:not(:last-child) {
+		margin-right: 10px;
+	}
+`;
+
+export const BoxButtons = styled.div`
+	display: flex;
+	margin-top: 20px;
+	${ButtonItem} {
+		flex: 1;
+	}
+`;
+
+export const BoxTitle = styled.div`
+	margin-bottom: 20px;
+	font-size: 18px;
+	color: #999;
+	line-height: 22px;
+	text-align: center;
+	.logo {
+		width: 55px;
+		margin:0 auto 10px;
+		img {
+			width: 100%;
+		}
+	}
+`;
+
+export const BoxForm = styled.form`
+	.box__form-input {
+		margin-top: 20px;
+	}
+	.box__input {
+		display: flex;
+		margin-top: 10px;
+		${ButtonItem} {
+			margin-left: 10px;
+			white-space: nowrap;
+		}
+	}
 `;
