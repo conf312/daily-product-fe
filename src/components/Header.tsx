@@ -6,9 +6,15 @@ import IconSearch from "../assets/image/icon__search.png";
 import IconArrow from "../assets/image/icon__arrow.png";
 import { Layer } from "./Layer";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export const Header = () => {
-	const BoxHeader = styled.header`
+	const locationPath = useLocation().pathname;
+
+	interface headerType{
+		type?: string;
+	}
+	const BoxHeader = styled.header<headerType>`
 		position: relative;
 		padding: 20px 0;
 		z-index: 10;
@@ -16,7 +22,7 @@ export const Header = () => {
 			content: "";
 			display: block;
 			position: absolute;
-			top: -50px;
+			top: ${props=> props.type!=="sub"?"-50px":"0"};
 			left: 0;
 			width: 100%;
 			height: 100%;
@@ -29,6 +35,7 @@ export const Header = () => {
 		}
 
 		${BoxInner} {
+			position: relative;
 			display: flex;
 			padding: 0 20px;
 			justify-content: space-between;
@@ -60,9 +67,6 @@ export const Header = () => {
 		margin: 20px auto 0;
 		border-radius: 8px;
 		box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-		input[type="text"] {
-			border-radius: 8px;
-		}
 		.button__search {
 			position: absolute;
 			top: calc(50% - 20px);
@@ -76,6 +80,7 @@ export const Header = () => {
 	const AreaUl = styled.ul`
 		display: flex;
 		flex-wrap: wrap;
+		justify-content: center;
 	`;
 	interface areaNum {
 		idx: number
@@ -83,7 +88,7 @@ export const Header = () => {
 	const AreaItem = styled.li<areaNum>`
 		position: relative;
 		width: calc(50% - 8px);
-		max-width: 170px;
+		max-width: 200px;
 		padding: 10px;
 		margin-top: 16px; 
 		margin-right: 16px;
@@ -128,24 +133,28 @@ export const Header = () => {
 
 	const openLayerEvent = () => {
 		setOpen(true);
+		document.querySelector("body")?.classList.add("scroll-lock");
 	}
 
 	const closeLayerEvent = () => {
 		setOpen(false);
+		document.querySelector("body")?.classList.remove("scroll-lock");
 	}
 
 	return (
 		<>
-			<BoxHeader>
+			<BoxHeader type={locationPath!=="/"?"sub":""}>
 				<BoxInner>
 					<ButtonArea onClick={openLayerEvent}>지역 선택</ButtonArea>
 					<Navigation />
 				</BoxInner>
 				
-				<BoxSearch>
-					<input type="text" placeholder="상품명, 마트명 입력"/>
-					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
-				</BoxSearch>
+				{locationPath !== "/"? null:
+					<BoxSearch>
+						<input type="text" placeholder="상품명, 마트명 입력" />
+						<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
+					</BoxSearch>
+				}
 			</BoxHeader>
 			
 			<Layer open={open} headTitle="지역 선택" content={dataArea} closeLayerEvent={closeLayerEvent}/>
