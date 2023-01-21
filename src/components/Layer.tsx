@@ -1,3 +1,4 @@
+
 import { ReactNode } from "react";
 import styled from "styled-components"
 import IconClose from "../assets/image/icon__close.png";

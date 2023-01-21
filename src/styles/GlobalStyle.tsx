@@ -50,12 +50,14 @@ export const GlobalStyle = createGlobalStyle`
 		border: 1px solid #e5e5e5;
 		border-radius: 8px;
 		@media ${theme.device.mobile}{
+			height: 48px;
 			font-size: 14px;
 		}
 	} 
 	input[type="text"]::placeholder, 
 	input[type="number"]::placeholder, 
-	input[type="tel"]::placeholder {
+	input[type="tel"]::placeholder,
+	input[type="password"]::placeholder {
 		color:#999;
 	}
 	.for-a11y {
@@ -69,7 +71,7 @@ export const GlobalStyle = createGlobalStyle`
 		color: ${theme.colors.pointColor};
 	}
 	#cBody {
-		padding-bottom: 40px;;
+		padding-bottom: 40px;
 	}
 	.scroll-lock {
 		overflow: hidden;
@@ -108,7 +110,6 @@ export const ButtonItem = styled.button<buttonProps>`
 	background-color: ${props=>props.bgColor?props.bgColor:null};
 	border: 1px solid ${props=>props.borderColor?props.borderColor:null};
 	border-radius: 8px;
-
 	&:not(:last-child) {
 		margin-right: 10px;
 	}
@@ -150,4 +151,3 @@ export const BoxForm = styled.form`
 		}
 	}
 `;
-
