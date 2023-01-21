@@ -1,15 +1,28 @@
+
+import { useState } from "react";
+import { useLocation } from "react-router";
 import styled from "styled-components";
-import { BoxInner } from "../styles/GlobalStyle";
 import { theme } from "../styles/Theme";
+import { BoxInner } from "../styles/GlobalStyle";
 import { Navigation } from "./Navigation";
+import { Layer } from "./Layer";
 import IconSearch from "../assets/image/icon__search.png";
 import IconArrow from "../assets/image/icon__arrow.png";
-import { Layer } from "./Layer";
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
 
 export const Header = () => {
 	const locationPath = useLocation().pathname;
+	let titleH2 = "";
+	if(locationPath === "/login"){
+		titleH2 = "로그인";
+	}else if(locationPath === "/join"){
+		titleH2 = "회원가입";
+	}else if(locationPath === "/faq"){
+		titleH2 = "자주 묻는 질문"
+	}else if(locationPath === "/like"){
+		titleH2 = "찜하기"
+	}else if(locationPath === "/terms"){
+		titleH2 = "정보제공처"
+	}
 
 	interface headerType{
 		type?: string;
@@ -42,6 +55,17 @@ export const Header = () => {
 			@media ${theme.device.mobile} {
 				padding: 0;	
 			}
+
+			.title__h2 {
+				font-size: 20px;
+				font-weight: 700;
+				color: #fff;
+				line-height: 36px;
+			}
+		}
+
+		& + #cBody {
+			padding-top: ${props=> props.type!=="sub"?"":"40px"};
 		}
 	`;
 
@@ -142,22 +166,24 @@ export const Header = () => {
 	}
 
 	return (
-		<>
-			<BoxHeader type={locationPath!=="/"?"sub":""}>
-				<BoxInner>
+		<BoxHeader type={locationPath!=="/"?"sub":""}>
+			<BoxInner>
+				{locationPath !== "/"?
+					<h2 className="title__h2">{titleH2}</h2>
+					:
 					<ButtonArea onClick={openLayerEvent}>지역 선택</ButtonArea>
-					<Navigation />
-				</BoxInner>
-				
-				{locationPath !== "/"? null:
-					<BoxSearch>
-						<input type="text" placeholder="상품명, 마트명 입력" />
-						<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
-					</BoxSearch>
 				}
-			</BoxHeader>
+
+				<Navigation />
+			</BoxInner>
 			
+			{locationPath !== "/"? null:
+				<BoxSearch>
+					<input type="text" placeholder="상품명, 마트명 입력" />
+					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
+				</BoxSearch>
+			}
 			<Layer open={open} headTitle="지역 선택" content={dataArea} closeLayerEvent={closeLayerEvent}/>
-		</>
+		</BoxHeader>
 	)
 }

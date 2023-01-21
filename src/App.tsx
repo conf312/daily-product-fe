@@ -15,6 +15,9 @@ function App() {
             <Route index path="/" element={<Home />} />
             <Route index path="/login" element={<Login />} />
             <Route index path="/join" element={<Join />} />
+            <Route index path="/faq" element={<Join />} />
+            <Route index path="/like" element={<Join />} />
+            <Route index path="/terms" element={<Join />} />
           </Routes>
         </div>
       </BoxWrap>

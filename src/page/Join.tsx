@@ -36,6 +36,9 @@ export const Join = () => {
                 <input type="text" placeholder="우편번호" />
                 <ButtonItem borderColor={theme.colors.pointColor} textColor={theme.colors.pointColor}>우편번호 검색</ButtonItem>
               </div>
+              <div className="box__input">
+                <input type="text" placeholder="상세주소 입력" />
+              </div>
             </div>
           </form>
           <BoxButtons>

@@ -8,8 +8,8 @@ export const Navigation = () => {
 	const [gnbOpen, setGnbOpen] = useState(false);
 	const BoxNavigation = styled.div`
 		position: absolute;
-		top: 0;
-		right: 0;
+		top: 16px;
+		right: 10px;
 		z-index: 5;
 		
 		&:before {
@@ -25,23 +25,18 @@ export const Navigation = () => {
 
 		.logo {
 			position: fixed;
-			top: 0;
+			top: 10px;
 			left: 80px;
 			display: ${gnbOpen?"block":"none"};
-			padding: 10px; 
-			font-size: 20px;
-			color: #fff;
-			line-height: 55px;
+			width: 106px;
+			height: 50px;
+			background: url(${logo}) no-repeat center / 80px auto;
 			z-index: 1;
-
-			&:before {
-				content:"";
-				display: inline-block;
-				width: 80px;
-				height: 50px;
-				margin-right: 5px;
-				background: url(${logo}) no-repeat center / 100% auto;
-				vertical-align: top;
+			a {
+				display: block;
+				width: 100%;
+				height: 100%;
+				padding: 16px; 
 			}
 		}
 	`;
@@ -117,7 +112,7 @@ export const Navigation = () => {
 
 	return (
 		<BoxNavigation>
-			<p className="logo"><span className="for-a11y">장보러가자 로고</span></p>
+			<h1 className="logo"><NavLink to="/" onClick={gnbControlEvent}><span className="for-a11y">장보러가자 로고</span></NavLink></h1>
 			<ButtonMenu onClick={gnbControlEvent}>
 				<span className="for-a11y">메뉴 열기</span>
 				<div className="box__icon">
@@ -127,9 +122,9 @@ export const Navigation = () => {
 				</div>
 			</ButtonMenu>
 			<Navigation>
-				<NavLink to="">자주 묻는 질문</NavLink>
-				<NavLink to="">찜 목록</NavLink>
-				<NavLink to="">정보제공처</NavLink>
+				<NavLink to="/faq" onClick={gnbControlEvent}>자주 묻는 질문</NavLink>
+				<NavLink to="/like" onClick={gnbControlEvent}>찜 목록</NavLink>
+				<NavLink to="/terms" onClick={gnbControlEvent}>정보제공처</NavLink>
 			</Navigation>
 		</BoxNavigation>
 	)
