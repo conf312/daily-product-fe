@@ -8,7 +8,7 @@ export const Navigation = () => {
 	const [gnbOpen, setGnbOpen] = useState(false);
 	const BoxNavigation = styled.div`
 		position: absolute;
-		top: 16px;
+		top: 0;
 		right: 10px;
 		z-index: 5;
 		
@@ -98,6 +98,26 @@ export const Navigation = () => {
 			font-weight: 700;
 		}
 	`;
+
+	const BoxUtil = styled.div`
+		position: fixed;
+		bottom: 16px;
+		right: 16px;
+		display: ${gnbOpen?"block":"none"};
+		font-size: 14px;
+		a {
+			color: #999;
+			&:not(:last-child):after {
+				content: "";
+				display: inline-block;
+				width: 1px;
+				height: 10px;
+				margin: 2px 5px;
+				background: #e5e5e5;
+				vertical-align: top;
+			}
+		}
+	`;
 		
 	const gnbControlEvent = () => {
 		if(!gnbOpen){
@@ -126,6 +146,10 @@ export const Navigation = () => {
 				<NavLink to="/like" onClick={gnbControlEvent}>찜 목록</NavLink>
 				<NavLink to="/terms" onClick={gnbControlEvent}>정보제공처</NavLink>
 			</Navigation>
+			<BoxUtil>
+				<NavLink to="/login" onClick={gnbControlEvent}>로그인</NavLink>
+				<NavLink to="/join" onClick={gnbControlEvent}>회원가입</NavLink>
+			</BoxUtil>
 		</BoxNavigation>
 	)
 }

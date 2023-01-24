@@ -82,7 +82,7 @@ export const Home = () => {
 					})}
 				</BoxCategory>
 			</>
-			<List/>
+			{/* <List/> */}
 		</BoxInner>
 	)
 }
