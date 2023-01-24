@@ -1,5 +1,5 @@
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import styled from "styled-components"
 import IconClose from "../assets/image/icon__close.png";
 import { theme } from "../styles/Theme";

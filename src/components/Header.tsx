@@ -1,13 +1,23 @@
 
-import { useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import styled from "styled-components";
 import { theme } from "../styles/Theme";
 import { BoxInner } from "../styles/GlobalStyle";
 import { Navigation } from "./Navigation";
 import { Layer } from "./Layer";
+import { Guide } from "./Guide";
 import IconSearch from "../assets/image/icon__search.png";
 import IconArrow from "../assets/image/icon__arrow.png";
+import { send } from "../apis/Api";
+
+const guideData = [
+	{
+		text: "지역을 선택해주세요.",
+		x: 40,
+		y: 60
+	}
+];
 
 export const Header = () => {
 	const locationPath = useLocation().pathname;
@@ -22,6 +32,52 @@ export const Header = () => {
 		titleH2 = "찜하기"
 	}else if(locationPath === "/terms"){
 		titleH2 = "정보제공처"
+	}
+	
+	interface selectType {
+		select: boolean;
+		area?: string
+	}
+	interface areaType {
+		code: string;
+		area: string;
+	}
+	
+	const [open, setOpen] = useState(false);
+	const [selectArea, setSelectArea] = useState<selectType>({
+		select: false,
+		area : ""
+	});
+	const [areaData, setAreaData] = useState<areaType[]>();
+	const [dataArea, setDataArea] = useState<ReactNode>();
+
+	useEffect(()=>{
+		if(!selectArea.select){
+			document.querySelector("body")?.classList.add("scroll-lock");
+		}else{
+			document.querySelector("body")?.classList.remove("scroll-lock");
+		}
+		
+		if(areaData === undefined){
+			send("get", "/api/livestock/autonomous", "", {}, function (r) {
+				setAreaData(r.data);
+			});
+		}
+		if(dataArea === undefined){
+			getAreaData();
+		}
+	},[selectArea, areaData, dataArea]);
+
+	const openLayerEvent = () => {
+		setOpen(true);
+		document.querySelector("body")?.classList.add("scroll-lock");
+	}
+
+	const closeLayerEvent = () => {
+		setOpen(false);
+		if(selectArea.select){
+			document.querySelector("body")?.classList.remove("scroll-lock");
+		}
 	}
 
 	interface headerType{
@@ -70,9 +126,11 @@ export const Header = () => {
 	`;
 
 	const ButtonArea = styled.button`
+		position: relative;
 		font-size: 20px;
 		font-weight: 700;
 		color: #fff;
+		z-index: ${selectArea.select?"":7};
 		&:after {
 			content: "";
 			display: inline-block;
@@ -101,7 +159,7 @@ export const Header = () => {
 		}
 	`;
 
-	const AreaUl = styled.ul`
+	const AreaUl = styled.div`
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -109,7 +167,7 @@ export const Header = () => {
 	interface areaNum {
 		idx: number
 	}
-	const AreaItem = styled.li<areaNum>`
+	const AreaItem = styled.button<areaNum>`
 		position: relative;
 		width: calc(50% - 8px);
 		max-width: 200px;
@@ -141,28 +199,29 @@ export const Header = () => {
 		}
 	`;
 
-	const areaData = ["강남구", "강동구","광진구", "강북구", "강서구", "관악구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"];
-
-	const areaItemList = areaData.map((item, idx)=>{
-		return(
-			<AreaItem key={idx} idx={idx}>
-				<p className="box__icon"></p>
-				<p className="text">{item}</p>
-			</AreaItem>
-		)
-	});
-	const dataArea = <AreaUl>{areaItemList}</AreaUl>
-
-	const [open, setOpen] = useState(false);
-
-	const openLayerEvent = () => {
-		setOpen(true);
-		document.querySelector("body")?.classList.add("scroll-lock");
+	const areaSelect = (event:React.MouseEvent<HTMLButtonElement>) => {
+		const selectText = event.currentTarget.querySelector(".text")?.textContent?.toString();
+		setSelectArea({
+			select: true,
+			area: selectText
+		});
+		setOpen(false);
 	}
 
-	const closeLayerEvent = () => {
-		setOpen(false);
-		document.querySelector("body")?.classList.remove("scroll-lock");
+	const getAreaData = () =>{
+		if(areaData){
+			const areaItemList = areaData.map((item:any, idx:any)=>{
+				if(item.autonomousName !== ""){
+					return(
+						<AreaItem key={idx} idx={item.autonomousCode} onClick={areaSelect}>
+							<p className="box__icon"></p>
+							<p className="text">{item.autonomousName}</p>
+						</AreaItem>
+					)
+				}
+			});
+			setDataArea(<AreaUl>{areaItemList}</AreaUl>);
+		}
 	}
 
 	return (
@@ -171,7 +230,7 @@ export const Header = () => {
 				{locationPath !== "/"?
 					<h2 className="title__h2">{titleH2}</h2>
 					:
-					<ButtonArea onClick={openLayerEvent}>지역 선택</ButtonArea>
+					<ButtonArea onClick={openLayerEvent}>{selectArea.select?selectArea.area:"지역선택"}</ButtonArea>
 				}
 
 				<Navigation />
@@ -183,7 +242,10 @@ export const Header = () => {
 					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
 				</BoxSearch>
 			}
-			<Layer open={open} headTitle="지역 선택" content={dataArea} closeLayerEvent={closeLayerEvent}/>
+			<Layer open={open} headTitle="지역 선택" content={dataArea !== undefined?dataArea:"데이터 없음"} closeLayerEvent={closeLayerEvent}/>
+			{locationPath === "/"?
+				<Guide visible={selectArea.select} guideText={guideData}></Guide>
+			:null}
 		</BoxHeader>
 	)
 }
