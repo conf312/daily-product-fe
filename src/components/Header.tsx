@@ -191,7 +191,7 @@ export const Header = () => {
 		.box__icon {
 			width: 100%;
 			height: 150px;
-			background: url("./assets/icon__area${props=>props.idx+1}.png") no-repeat center / cover;
+			background: url("${process.env.PUBLIC_URL}/assets/icon__area${props=>props.idx+1}.png") no-repeat center / cover;
 		}
 		.text {
 			position: absolute;
@@ -234,9 +234,9 @@ export const Header = () => {
 	}
 
 	return (
-		<BoxHeader type={locationPath!=="/"?"sub":""}>
+		<BoxHeader type={titleH2!==""?"sub":""}>
 			<BoxInner>
-				{locationPath !== "/"?
+				{titleH2 !== ""?
 					<h2 className="title__h2">{titleH2}</h2>
 					:
 					<ButtonArea onClick={openLayerEvent}>{cookies.selectArea?cookies.currentArea:"지역선택"}</ButtonArea>
@@ -245,7 +245,7 @@ export const Header = () => {
 				<Navigation />
 			</BoxInner>
 			
-			{locationPath !== "/"? null:
+			{titleH2 !== ""? null:
 				<BoxSearch>
 					<input type="text" placeholder="상품명, 마트명 입력" />
 					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>

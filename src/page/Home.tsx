@@ -1,27 +1,18 @@
-
-import { useState } from "react";
 import { useCookies } from 'react-cookie';
+import { NavLink } from 'react-router-dom';
 import styled from "styled-components";
-import { send } from "../apis/Api";
-import { List } from "../components/List";
 import { BoxInner } from "../styles/GlobalStyle"
 import { theme } from "../styles/Theme";
 
 const dummyProduct = ["사과",	"배",	"배추",	"무",	"양파",	"상추",	"오이",	"호박",	"쇠고기",	"돼지고기",	"닭고기",	"달걀",	"조기",	"명태",	"오징어",	"고등어",	"애호박",	"냉동참조기",	"삼겹살",	"동태",	"갈치",	"참기름",	"쌀"];
 
 export const Home = () => {
-	const [cookies, setCookie, removeCookie] = useCookies();
-	const [search, setSearch] = useState(false);
-	const [data, setData] = useState([]);
-	const [dataType, setDataType] = useState<string>();
-	
-	interface buttonType {
+	interface itemType {
 		category?: string
 	}
-	const ButtonCategory = styled.button<buttonType>`
+	const CategoryItem = styled.li<itemType>`
 		display: inline-block;
 		width: ${props=>props.category!=="product"?"calc(50% - 8px)":"20%"};
-		padding: ${props=>props.category!=="product"?"20px":""};
 		margin-right: ${props=>props.category!=="product"?"16px":""};
 		margin-bottom: ${props=>props.category==="product"?"16px":""};
 		font-size: 18px;
@@ -29,6 +20,13 @@ export const Home = () => {
 		color: #333;
 		border-radius: ${props=>props.category!=="product"?"8px":""};
 		box-shadow: ${props=>props.category!=="product"?"2px 2px 5px rgba(0,0,0,0.2)":""};
+		text-align: center;
+		a {
+			display: block;
+			width: 100%;
+			height: 100%;
+			padding: ${props=>props.category!=="product"?"20px":""};
+		}
 		.box__icon{
 			width: ${props=>props.category==="product"?"90px":""};
 			height: ${props=>props.category==="product"?"90px":""};
@@ -59,53 +57,41 @@ export const Home = () => {
 		}
 	`;
 
-	const BoxCategory = styled.div`
+	const BoxCategory = styled.ul`
 		margin-bottom: 20px;
-		&:first-child ${ButtonCategory}:last-child{
+		&:first-child ${CategoryItem}:last-child{
 			margin-right: 0;
 		}
 	`;
 
-	const getData = (event:React.MouseEvent<HTMLButtonElement>) => {
-		event.preventDefault();
-		const areaCode = cookies.currentCode;
-		const placeCode = event.currentTarget.attributes.getNamedItem("data-index")?.value;
-		setDataType(placeCode);
-		send("get",`/api/livestock/autonomous/${areaCode}/${placeCode}`, "", {}, function(r){
-			setSearch(true);
-			setData(r.data);
-		})	
-	}
-
 	return (
 		<BoxInner>
-			{!search?
-				<>
-					<BoxCategory>
-						<ButtonCategory onClick={getData} data-index={1}>
-							<p className="box__icon"><img src="./assets/icon__store1.png" alt="" /></p>
-							<p className="text">시장</p>
-						</ButtonCategory>
-						<ButtonCategory onClick={getData} data-index={2}>
-							<p className="box__icon"><img src="./assets/icon__store2.png" alt="" /></p>
-							<p className="text">마트</p>
-						</ButtonCategory>
-					</BoxCategory>		
-					<BoxCategory>
-						{dummyProduct.map((item, idx)=>{
-							return(
-								<ButtonCategory category="product" key={idx}>
-									<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
-									<p className="text">{item}</p>
-								</ButtonCategory>							
-							)
-						})}
-					</BoxCategory>
-				</>
-			:
-				<List type={dataType} data={data}/>
-			}
-			
+			<BoxCategory>
+				<CategoryItem>
+					<NavLink to="/list/market-tradition">
+						<p className="box__icon"><img src="./assets/icon__store1.png" alt="" /></p>
+						<p className="text">시장</p>
+					</NavLink>
+				</CategoryItem>
+				<CategoryItem>
+					<NavLink to="/list/market">
+						<p className="box__icon"><img src="./assets/icon__store2.png" alt="" /></p>
+						<p className="text">마트</p>
+					</NavLink>
+				</CategoryItem>
+			</BoxCategory>		
+			<BoxCategory>
+				{dummyProduct.map((item, idx)=>{
+					return(
+						<CategoryItem category="product">
+							<NavLink to="/list">
+								<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
+								<p className="text">{item}</p>
+							</NavLink>
+						</CategoryItem>				
+					)
+				})}
+			</BoxCategory>
 		</BoxInner>
 	)
 }

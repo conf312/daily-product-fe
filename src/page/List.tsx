@@ -1,20 +1,22 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import styled from "styled-components";
 import { theme } from "../styles/Theme";
-import { Layer } from "./Layer";
+import { Layer } from "../components/Layer";
 import iconAlign from "../assets/image/icon__align.png";
+import { send } from "../apis/Api";
+import { BoxInner } from "../styles/GlobalStyle";
 
 interface objectType {
 	placeCode: string;
 	placeName: string;
 }
-interface propsType {
-	type?: string;
+interface dataType {
 	data: Array<objectType>;
 }
-export const List = (props:propsType) => {
+export const List = () => {
 	const BoxSummary = styled.div`
 		display: flex;
 		justify-content: space-between;
@@ -112,45 +114,46 @@ export const List = (props:propsType) => {
 	}
 
 	const [cookies, setCookie, removeCookie] = useCookies();
+	const [data, setData] = useState<Array<objectType>>([]);
+	
+	const {type} = useParams();
+
+	const getData = () => {
+		if(data.length === 0){
+			const areaCode = cookies.currentCode;
+			const placeCode = type==="market-tradition"?"1":"2";
+			send("get",`/api/livestock/autonomous/${areaCode}/${placeCode}`, "", {}, function(r){
+				setData(r.data);
+			})
+		}	
+	}
+
+	useEffect(()=>{
+		getData();
+	},[data, cookies]);
+
 
 	return (
-		<>
+		<BoxInner>
 			<BoxSummary>
-				<p className="text__total">총 <strong>{props.data.length}</strong>개</p>
+				<p className="text__total">총 <strong>{data.length}</strong>개</p>
 				<ButtonAlign onClick={openLayerEvent}>정렬</ButtonAlign>
 				<Layer open={open} type={"bottomType"} headTitle="정렬" content={dataArea} closeLayerEvent={closeLayerEvent}/>
 			</BoxSummary>
 			<ListUl>
-				{props.data.map((item, idx) => {
+				{data.map((item, idx) => {
 					return(
 						<ListItem>
 							<p className="text__title">{item.placeName}</p>
 							<p className="text__price"><span className="text__number">3,0000</span>원</p>
 							<div className="box__etc">
 								<span>{cookies.currentArea}</span>
-								<span>{props.type==="1"?"시장":"마트"}</span>
+								<span>{type ==="1"?"시장":"마트"}</span>
 							</div>
 						</ListItem>
 					)
 				})}
-				{/* <ListItem>
-					<p className="text__title">사과</p>
-					<p className="text__price"><span className="text__number">3,0000</span>원</p>
-					<div className="box__etc">
-						<span>시장</span>
-						<span>마트</span>
-						<span>시장</span>
-					</div>
-				</ListItem>
-				
-				<ListItem>
-					<p className="text__title">마트명</p>
-					<div className="box__etc">
-						<span>지역구</span>
-						<span>시장</span>
-					</div>
-				</ListItem> */}
 			</ListUl>
-		</>
+		</BoxInner>
 	)
 }
