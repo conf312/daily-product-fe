@@ -1,4 +1,8 @@
+
+import { useState } from "react";
+import { useCookies } from 'react-cookie';
 import styled from "styled-components";
+import { send } from "../apis/Api";
 import { List } from "../components/List";
 import { BoxInner } from "../styles/GlobalStyle"
 import { theme } from "../styles/Theme";
@@ -6,6 +10,11 @@ import { theme } from "../styles/Theme";
 const dummyProduct = ["사과",	"배",	"배추",	"무",	"양파",	"상추",	"오이",	"호박",	"쇠고기",	"돼지고기",	"닭고기",	"달걀",	"조기",	"명태",	"오징어",	"고등어",	"애호박",	"냉동참조기",	"삼겹살",	"동태",	"갈치",	"참기름",	"쌀"];
 
 export const Home = () => {
+	const [cookies, setCookie, removeCookie] = useCookies();
+	const [search, setSearch] = useState(false);
+	const [data, setData] = useState([]);
+	const [dataType, setDataType] = useState<string>();
+	
 	interface buttonType {
 		category?: string
 	}
@@ -57,32 +66,46 @@ export const Home = () => {
 		}
 	`;
 
-	
+	const getData = (event:React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		const areaCode = cookies.currentCode;
+		const placeCode = event.currentTarget.attributes.getNamedItem("data-index")?.value;
+		setDataType(placeCode);
+		send("get",`/api/livestock/autonomous/${areaCode}/${placeCode}`, "", {}, function(r){
+			setSearch(true);
+			setData(r.data);
+		})	
+	}
+
 	return (
 		<BoxInner>
-			<>
-				<BoxCategory>
-					<ButtonCategory>
-						<p className="box__icon"><img src="./assets/icon__store1.png" alt="" /></p>
-						<p className="text">시장</p>
-					</ButtonCategory>
-					<ButtonCategory>
-						<p className="box__icon"><img src="./assets/icon__store2.png" alt="" /></p>
-						<p className="text">시장</p>
-					</ButtonCategory>
-				</BoxCategory>		
-				<BoxCategory>
-					{dummyProduct.map((item, idx)=>{
-						return(
-							<ButtonCategory category="product" key={idx}>
-								<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
-								<p className="text">{item}</p>
-							</ButtonCategory>							
-						)
-					})}
-				</BoxCategory>
-			</>
-			{/* <List/> */}
+			{!search?
+				<>
+					<BoxCategory>
+						<ButtonCategory onClick={getData} data-index={1}>
+							<p className="box__icon"><img src="./assets/icon__store1.png" alt="" /></p>
+							<p className="text">시장</p>
+						</ButtonCategory>
+						<ButtonCategory onClick={getData} data-index={2}>
+							<p className="box__icon"><img src="./assets/icon__store2.png" alt="" /></p>
+							<p className="text">마트</p>
+						</ButtonCategory>
+					</BoxCategory>		
+					<BoxCategory>
+						{dummyProduct.map((item, idx)=>{
+							return(
+								<ButtonCategory category="product" key={idx}>
+									<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
+									<p className="text">{item}</p>
+								</ButtonCategory>							
+							)
+						})}
+					</BoxCategory>
+				</>
+			:
+				<List type={dataType} data={data}/>
+			}
+			
 		</BoxInner>
 	)
 }

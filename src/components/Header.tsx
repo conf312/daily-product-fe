@@ -2,6 +2,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import styled from "styled-components";
+import { useCookies } from 'react-cookie';
 import { theme } from "../styles/Theme";
 import { BoxInner } from "../styles/GlobalStyle";
 import { Navigation } from "./Navigation";
@@ -21,6 +22,7 @@ const guideData = [
 
 export const Header = () => {
 	const locationPath = useLocation().pathname;
+	const [cookies, setCookie, removeCookie] = useCookies();
 	let titleH2 = "";
 	if(locationPath === "/login"){
 		titleH2 = "로그인";
@@ -36,7 +38,8 @@ export const Header = () => {
 	
 	interface selectType {
 		select: boolean;
-		area?: string
+		code?: string;
+		area?: string;
 	}
 	interface areaType {
 		code: string;
@@ -46,13 +49,14 @@ export const Header = () => {
 	const [open, setOpen] = useState(false);
 	const [selectArea, setSelectArea] = useState<selectType>({
 		select: false,
-		area : ""
+		code: "",
+		area: ""
 	});
 	const [areaData, setAreaData] = useState<areaType[]>();
 	const [dataArea, setDataArea] = useState<ReactNode>();
 
 	useEffect(()=>{
-		if(!selectArea.select){
+		if(!cookies.selectArea){
 			document.querySelector("body")?.classList.add("scroll-lock");
 		}else{
 			document.querySelector("body")?.classList.remove("scroll-lock");
@@ -66,7 +70,7 @@ export const Header = () => {
 		if(dataArea === undefined){
 			getAreaData();
 		}
-	},[selectArea, areaData, dataArea]);
+	},[cookies, areaData, dataArea]);
 
 	const openLayerEvent = () => {
 		setOpen(true);
@@ -75,7 +79,7 @@ export const Header = () => {
 
 	const closeLayerEvent = () => {
 		setOpen(false);
-		if(selectArea.select){
+		if(cookies.selectArea){
 			document.querySelector("body")?.classList.remove("scroll-lock");
 		}
 	}
@@ -130,7 +134,7 @@ export const Header = () => {
 		font-size: 20px;
 		font-weight: 700;
 		color: #fff;
-		z-index: ${selectArea.select?"":7};
+		z-index: ${cookies.selectArea?"":7};
 		&:after {
 			content: "";
 			display: inline-block;
@@ -201,10 +205,15 @@ export const Header = () => {
 
 	const areaSelect = (event:React.MouseEvent<HTMLButtonElement>) => {
 		const selectText = event.currentTarget.querySelector(".text")?.textContent?.toString();
+		const selectCode = event.currentTarget.attributes.getNamedItem("data-code")?.value;
 		setSelectArea({
 			select: true,
-			area: selectText
+			code: selectCode,
+			area: selectText,
 		});
+		setCookie("selectArea", true);
+		setCookie("currentCode", selectCode);
+		setCookie("currentArea", selectText);
 		setOpen(false);
 	}
 
@@ -213,7 +222,7 @@ export const Header = () => {
 			const areaItemList = areaData.map((item:any, idx:any)=>{
 				if(item.autonomousName !== ""){
 					return(
-						<AreaItem key={idx} idx={item.autonomousCode} onClick={areaSelect}>
+						<AreaItem key={idx} idx={item.autonomousCode} onClick={areaSelect} data-code={item.autonomousCode}>
 							<p className="box__icon"></p>
 							<p className="text">{item.autonomousName}</p>
 						</AreaItem>
@@ -230,7 +239,7 @@ export const Header = () => {
 				{locationPath !== "/"?
 					<h2 className="title__h2">{titleH2}</h2>
 					:
-					<ButtonArea onClick={openLayerEvent}>{selectArea.select?selectArea.area:"지역선택"}</ButtonArea>
+					<ButtonArea onClick={openLayerEvent}>{cookies.selectArea?cookies.currentArea:"지역선택"}</ButtonArea>
 				}
 
 				<Navigation />
@@ -244,7 +253,7 @@ export const Header = () => {
 			}
 			<Layer open={open} headTitle="지역 선택" content={dataArea !== undefined?dataArea:"데이터 없음"} closeLayerEvent={closeLayerEvent}/>
 			{locationPath === "/"?
-				<Guide visible={selectArea.select} guideText={guideData}></Guide>
+				<Guide visible={cookies.selectArea} guideText={guideData}></Guide>
 			:null}
 		</BoxHeader>
 	)

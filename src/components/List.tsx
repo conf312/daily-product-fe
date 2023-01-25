@@ -1,11 +1,20 @@
 
 import { useState } from "react";
+import { useCookies } from 'react-cookie';
 import styled from "styled-components";
 import { theme } from "../styles/Theme";
 import { Layer } from "./Layer";
 import iconAlign from "../assets/image/icon__align.png";
 
-export const List = () => {
+interface objectType {
+	placeCode: string;
+	placeName: string;
+}
+interface propsType {
+	type?: string;
+	data: Array<objectType>;
+}
+export const List = (props:propsType) => {
 	const BoxSummary = styled.div`
 		display: flex;
 		justify-content: space-between;
@@ -101,15 +110,30 @@ export const List = () => {
 		setOpen(false);
 		document.querySelector("body")?.classList.remove("scroll-lock");
 	}
+
+	const [cookies, setCookie, removeCookie] = useCookies();
+
 	return (
 		<>
 			<BoxSummary>
-				<p className="text__total">총 <strong>2</strong>개</p>
+				<p className="text__total">총 <strong>{props.data.length}</strong>개</p>
 				<ButtonAlign onClick={openLayerEvent}>정렬</ButtonAlign>
 				<Layer open={open} type={"bottomType"} headTitle="정렬" content={dataArea} closeLayerEvent={closeLayerEvent}/>
 			</BoxSummary>
 			<ListUl>
-				<ListItem>
+				{props.data.map((item, idx) => {
+					return(
+						<ListItem>
+							<p className="text__title">{item.placeName}</p>
+							<p className="text__price"><span className="text__number">3,0000</span>원</p>
+							<div className="box__etc">
+								<span>{cookies.currentArea}</span>
+								<span>{props.type==="1"?"시장":"마트"}</span>
+							</div>
+						</ListItem>
+					)
+				})}
+				{/* <ListItem>
 					<p className="text__title">사과</p>
 					<p className="text__price"><span className="text__number">3,0000</span>원</p>
 					<div className="box__etc">
@@ -125,7 +149,7 @@ export const List = () => {
 						<span>지역구</span>
 						<span>시장</span>
 					</div>
-				</ListItem>
+				</ListItem> */}
 			</ListUl>
 		</>
 	)
