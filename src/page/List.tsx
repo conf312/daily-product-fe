@@ -119,11 +119,11 @@ export const List = () => {
 	const {type} = useParams();
 
 	const getData = () => {
-		if(data.length === 0){
+		if(!data.length){
 			const areaCode = cookies.currentCode;
 			const placeCode = type==="market-tradition"?"1":"2";
 			send("get",`/api/livestock/autonomous/${areaCode}/${placeCode}`, "", {}, function(r){
-				setData(r.data);
+				if(r.data.length>0) setData(r.data);
 			})
 		}	
 	}
