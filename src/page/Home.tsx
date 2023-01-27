@@ -1,4 +1,3 @@
-import { useCookies } from 'react-cookie';
 import { NavLink } from 'react-router-dom';
 import styled from "styled-components";
 import { BoxInner } from "../styles/GlobalStyle"
@@ -83,8 +82,8 @@ export const Home = () => {
 			<BoxCategory>
 				{dummyProduct.map((item, idx)=>{
 					return(
-						<CategoryItem category="product">
-							<NavLink to="/list">
+						<CategoryItem category="product" key={idx}>
+							<NavLink to={"/list/product"+`${idx}`}>
 								<p className="box__icon"><img src={"./assets/icon__product"+`${idx+1}`+".png"} alt="" /></p>
 								<p className="text">{item}</p>
 							</NavLink>

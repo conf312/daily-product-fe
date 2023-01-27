@@ -10,8 +10,11 @@ import { send } from "../apis/Api";
 import { BoxInner } from "../styles/GlobalStyle";
 
 interface objectType {
-	placeCode: string;
-	placeName: string;
+	placeCode?: string;
+	placeName?: string;
+	productName?: string;
+	price?: number;
+	remarks?: string;
 }
 interface dataType {
 	data: Array<objectType>;
@@ -67,6 +70,7 @@ export const List = () => {
 		}
 
 		.box__etc {
+			max-width: calc(100% - 100px);
 			margin-top: 10px;
 			font-size: 14px; 
 			color: #999;
@@ -119,18 +123,29 @@ export const List = () => {
 	const {type} = useParams();
 
 	const getData = () => {
-		if(!data.length){
-			const areaCode = cookies.currentCode;
-			const placeCode = type==="market-tradition"?"1":"2";
-			send("get",`/api/livestock/autonomous/${areaCode}/${placeCode}`, "", {}, function(r){
-				if(r.data.length>0) setData(r.data);
-			})
-		}	
+		const areaCode = cookies.currentCode;
+		let url;
+		const dummyProduct = ["사과",	"배",	"배추",	"무",	"양파",	"상추",	"오이",	"호박",	"쇠고기",	"돼지고기",	"닭고기",	"달걀",	"조기",	"명태",	"오징어",	"고등어",	"애호박",	"냉동참조기",	"삼겹살",	"동태",	"갈치",	"참기름",	"쌀"];
+		if(type === "market-tradition"){
+			url="/api/livestock/autonomous/"+areaCode+"/1";
+		}else if(type === "market"){
+			url="/api/livestock/autonomous/"+areaCode+"/2";
+		}else{
+			const idx = Number(type?.split("t")[1]);
+			const placeCode= dummyProduct[idx];     
+			url="/api/livestock/product/"+areaCode +"/"+placeCode+"/0/32";   
+		}
+		console.log(url)
+
+		send("get",url, "", {}, function(r){
+			if(r.data.length>0) setData(r.data);
+			console.log(r.data)
+		});
 	}
 
 	useEffect(()=>{
 		getData();
-	},[data, cookies]);
+	},[cookies]);
 
 
 	return (
@@ -144,11 +159,21 @@ export const List = () => {
 				{data.map((item, idx) => {
 					return(
 						<ListItem>
-							<p className="text__title">{item.placeName}</p>
-							<p className="text__price"><span className="text__number">3,0000</span>원</p>
+							<p className="text__title">{type?.indexOf("market") === 0?item.placeName:item.productName}</p>
+							{type?.indexOf("market") === -1?
+								<p className="text__price"><span className="text__number">{item.price?.toLocaleString()}</span>원</p>
+								: null
+							}
 							<div className="box__etc">
 								<span>{cookies.currentArea}</span>
-								<span>{type ==="1"?"시장":"마트"}</span>
+								{type?.indexOf("market") === 0?
+									<span>{type === "1"?"시장":"마트"}</span>
+									:
+									<>
+										<span>{item.placeName}</span>
+										<span>{item.remarks}</span>
+									</>
+								}
 							</div>
 						</ListItem>
 					)
