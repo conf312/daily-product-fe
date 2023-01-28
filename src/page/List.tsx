@@ -19,86 +19,89 @@ interface objectType {
 interface dataType {
 	data: Array<objectType>;
 }
-export const List = () => {
-	const BoxSummary = styled.div`
-		display: flex;
-		justify-content: space-between;
-		.text__total {
-			font-size: 16px;
-			strong {
-				font-weight: bold;
-				color: ${theme.colors.pointColor};
-			}
 
-			@media ${theme.device.mobile} {
-				font-size: 14px;
-			}
+const BoxSummary = styled.div`
+	display: flex;
+	justify-content: space-between;
+	.text__total {
+		font-size: 16px;
+		strong {
+			font-weight: bold;
+			color: ${theme.colors.pointColor};
 		}
-	`;
-	const ButtonAlign = styled.button`
-		&:before {
+
+		@media ${theme.device.mobile} {
+			font-size: 14px;
+		}
+	}
+`;
+const ButtonAlign = styled.button`
+	&:before {
+		content: "";
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		margin-right: 5px;
+		background: url(${iconAlign}) no-repeat center / cover;
+		vertical-align: top;
+	}
+`;
+const ListUl = styled.ul`
+	margin-top: 16px;
+`;
+const ListItem = styled.li`
+	position: relative;
+	padding: 20px; 
+	border: 1px solid #e5e5e5;
+	border-radius: 8px;
+	&:not(:first-child) {
+		margin-top: 16px;
+	}
+	@media ${theme.device.mobile} {
+		padding: 16px;
+	}
+	.text__price {
+		position: absolute;
+		bottom: 16px;
+		right: 16px;
+		.text__number {
+			font-weight: 700;
+		}
+	}
+
+	.box__etc {
+		max-width: calc(100% - 100px);
+		margin-top: 10px;
+		font-size: 14px; 
+		color: #999;
+
+		span:not(:last-child):after {
 			content: "";
 			display: inline-block;
-			width: 20px;
-			height: 20px;
-			margin-right: 5px;
-			background: url(${iconAlign}) no-repeat center / cover;
+			width: 1px;
+			height: 10px;
+			margin: 2px 5px;
+			background: #e5e5e5;
 			vertical-align: top;
 		}
-	`;
-	const ListUl = styled.ul`
-		margin-top: 16px;
-	`;
-	const ListItem = styled.li`
-		position: relative;
-		padding: 20px; 
-		border: 1px solid #e5e5e5;
-		border-radius: 8px;
-		&:not(:first-child) {
-			margin-top: 16px;
-		}
 		@media ${theme.device.mobile} {
-			padding: 16px;
+			font-size: 12px;
 		}
-		.text__price {
-			position: absolute;
-			bottom: 16px;
-			right: 16px;
-			.text__number {
-				font-weight: 700;
-			}
-		}
+	}
+`;
 
-		.box__etc {
-			max-width: calc(100% - 100px);
-			margin-top: 10px;
-			font-size: 14px; 
-			color: #999;
+const LayerItem = styled.button`
+	display: block;
+	width: 100%;
+	padding: 16px;
+	font-size: 20px;
+	font-weight: 700;
+	color: #333;
+`;
 
-			span:not(:last-child):after {
-				content: "";
-				display: inline-block;
-				width: 1px;
-				height: 10px;
-				margin: 2px 5px;
-				background: #e5e5e5;
-				vertical-align: top;
-			}
-			@media ${theme.device.mobile} {
-				font-size: 12px;
-			}
-		}
-	`;
+export const List = () => {
 	const layerData = ["가격 오름차순", "가격 내림차순"];
-
-	const LayerItem = styled.button`
-		display: block;
-		width: 100%;
-		padding: 16px;
-		font-size: 20px;
-		font-weight: 700;
-		color: #333;
-	`;
+	
 	const areaItemList = layerData.map((item, idx)=>{
 		return(
 			<LayerItem key={idx}>{item}</LayerItem>
@@ -135,11 +138,9 @@ export const List = () => {
 			const placeCode= dummyProduct[idx];     
 			url="/api/livestock/product/"+areaCode +"/"+placeCode+"/0/32";   
 		}
-		console.log(url)
 
 		send("get",url, "", {}, function(r){
 			if(r.data.length>0) setData(r.data);
-			console.log(r.data)
 		});
 	}
 
@@ -158,7 +159,7 @@ export const List = () => {
 			<ListUl>
 				{data.map((item, idx) => {
 					return(
-						<ListItem>
+						<ListItem onClick={getData} key={idx}>
 							<p className="text__title">{type?.indexOf("market") === 0?item.placeName:item.productName}</p>
 							{type?.indexOf("market") === -1?
 								<p className="text__price"><span className="text__number">{item.price?.toLocaleString()}</span>원</p>
