@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import styled from "styled-components";
 import { theme } from "../styles/Theme";
@@ -15,6 +15,7 @@ interface objectType {
 	productName?: string;
 	price?: number;
 	remarks?: string;
+	standard?: string;
 }
 interface dataType {
 	data: Array<objectType>;
@@ -60,12 +61,19 @@ const ListItem = styled.li`
 	@media ${theme.device.mobile} {
 		padding: 16px;
 	}
+	.text__title {
+		font-weight: 700;
+		color: #333;
+	}
 	.text__price {
 		position: absolute;
 		bottom: 16px;
 		right: 16px;
+		font-size: 12px;
 		.text__number {
 			font-weight: 700;
+			font-size: 18px;
+			color: ${theme.colors.pointColor};
 		}
 	}
 
@@ -122,17 +130,25 @@ export const List = () => {
 
 	const [cookies, setCookie, removeCookie] = useCookies();
 	const [data, setData] = useState<Array<objectType>>([]);
+	const areaCode = cookies.currentCode;
+	
+	const dummyProduct = ["사과",	"배",	"배추",	"무",	"양파",	"상추",	"오이",	"호박",	"쇠고기",	"돼지고기",	"닭고기",	"달걀",	"조기",	"명태",	"오징어",	"고등어",	"애호박",	"냉동참조기",	"삼겹살",	"동태",	"갈치",	"참기름",	"쌀"];
 	
 	const {type} = useParams();
-
+	const {type2} = useParams();
+	let url;
 	const getData = () => {
-		const areaCode = cookies.currentCode;
-		let url;
-		const dummyProduct = ["사과",	"배",	"배추",	"무",	"양파",	"상추",	"오이",	"호박",	"쇠고기",	"돼지고기",	"닭고기",	"달걀",	"조기",	"명태",	"오징어",	"고등어",	"애호박",	"냉동참조기",	"삼겹살",	"동태",	"갈치",	"참기름",	"쌀"];
+		console.log("type=>", type, "type2=>", type2);
 		if(type === "market-tradition"){
-			url="/api/livestock/autonomous/"+areaCode+"/1";
+			if(type2 === undefined){
+				url="/api/livestock/autonomous/"+areaCode+"/1";
+			}else{
+				url="/api/livestock/place/"+areaCode+"/"+type2+"/0/32";
+			}
 		}else if(type === "market"){
 			url="/api/livestock/autonomous/"+areaCode+"/2";
+		}else if(type === "search"){
+			url=`/api/livestock/search/${areaCode}/${type2}/0/32`;
 		}else{
 			const idx = Number(type?.split("t")[1]);
 			const placeCode= dummyProduct[idx];     
@@ -141,12 +157,13 @@ export const List = () => {
 
 		send("get",url, "", {}, function(r){
 			if(r.data.length>0) setData(r.data);
+			console.log(r.data);
 		});
 	}
 
 	useEffect(()=>{
 		getData();
-	},[cookies]);
+	},[cookies, type2]);
 
 
 	return (
@@ -159,23 +176,33 @@ export const List = () => {
 			<ListUl>
 				{data.map((item, idx) => {
 					return(
-						<ListItem onClick={getData} key={idx}>
-							<p className="text__title">{type?.indexOf("market") === 0?item.placeName:item.productName}</p>
-							{type?.indexOf("market") === -1?
-								<p className="text__price"><span className="text__number">{item.price?.toLocaleString()}</span>원</p>
-								: null
-							}
-							<div className="box__etc">
-								<span>{cookies.currentArea}</span>
-								{type?.indexOf("market") === 0?
-									<span>{type === "1"?"시장":"마트"}</span>
-									:
-									<>
-										<span>{item.placeName}</span>
-										<span>{item.remarks}</span>
-									</>
+						<ListItem key={idx}>
+							<NavLink to={
+								type?.indexOf("market") === 0?
+									"/list/" + type +"/" + item.placeCode
+								: "/list/" + type +"/" + item.productName}>
+								<p className="text__title">
+									{type?.indexOf("market") === 0?
+										(type2===undefined?item.placeName:item.productName)
+									: item.productName}
+								</p>
+								{type?.indexOf("market") === -1 || type2!==undefined?
+									<p className="text__price"><span className="text__number">{item.price?.toLocaleString()}</span>원</p>
+									: null
 								}
-							</div>
+								<div className="box__etc">
+									<span>{cookies.currentArea}</span>
+									{type?.indexOf("market") === 0 && type2 === undefined?
+										<span>{type === "1"?"시장":"마트"}</span>
+										:
+										<>
+											<span>{item.placeName}</span>
+											<span>{item.remarks}</span>
+											<span>{item.standard}</span>
+										</>
+									}
+								</div>
+							</NavLink>
 						</ListItem>
 					)
 				})}

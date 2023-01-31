@@ -1,6 +1,6 @@
 
 import React, { ReactNode, useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
 import { useCookies } from 'react-cookie';
 import { theme } from "../styles/Theme";
@@ -73,7 +73,7 @@ const ButtonArea = styled.button<buttonProps>`
 	font-size: 20px;
 	font-weight: 700;
 	color: #fff;
-	z-index: ${props=>props.selectArea?"":7};
+	z-index: ${props=>props.selectArea===undefined?7:""};
 	&:after {
 		content: "";
 		display: inline-block;
@@ -237,13 +237,29 @@ export const Header = () => {
 		}
 	}
 
+	const [search, setSearch] = useState<String>();
+	const navigate = useNavigate();
+
+	const onChangeSearch = (event:React.ChangeEvent<HTMLInputElement>) =>{
+		setSearch(event.currentTarget.value);
+	}
+
+	const getSearchData = (event:React.MouseEvent<HTMLButtonElement>) =>{
+		console.log(search)
+
+		navigate("/list/search/"+search);
+		// send("get",`/api/livestock/search/${cookies.currentCode}/${search}/0/32`, "", {}, function(r){
+		// 	console.log(r.data);
+		// });
+	}
+
 	return (
 		<BoxHeader type={titleH2!==""?"sub":""}>
 			<BoxInner>
 				{titleH2 !== ""?
 					<h2 className="title__h2">{titleH2}</h2>
 					:
-					<ButtonArea onClick={openLayerEvent} selectArea={cookies.selectAera}>{cookies.selectArea?cookies.currentArea:"지역선택"}</ButtonArea>
+					<ButtonArea onClick={openLayerEvent} selectArea={cookies.selectArea}>{cookies.selectArea?cookies.currentArea:"지역선택"}</ButtonArea>
 				}
 
 				<Navigation />
@@ -251,8 +267,8 @@ export const Header = () => {
 			
 			{titleH2 !== ""? null:
 				<BoxSearch>
-					<input type="text" placeholder="상품명, 마트명 입력" />
-					<button type="button" className="button__search"><span className="for-a11y">검색하기</span></button>
+					<input type="text" placeholder="상품명, 마트명 입력" onChange={onChangeSearch}/>
+					<button type="button" className="button__search" onClick={getSearchData}><span className="for-a11y">검색하기</span></button>
 				</BoxSearch>
 			}
 			<Layer open={open} headTitle="지역 선택" content={dataArea !== undefined?dataArea:"데이터 없음"} closeLayerEvent={closeLayerEvent}/>

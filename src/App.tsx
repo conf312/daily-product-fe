@@ -15,6 +15,7 @@ function App() {
           <Routes>
             <Route index path="/" element={<Home />} />
             <Route index path="/list/:type" element={<List />} />
+            <Route index path="/list/:type/:type2" element={<List />} />
             <Route index path="/login" element={<Login />} />
             <Route index path="/join" element={<Join />} />
             <Route index path="/faq" element={<Join />} />
