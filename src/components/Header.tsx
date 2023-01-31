@@ -245,12 +245,7 @@ export const Header = () => {
 	}
 
 	const getSearchData = (event:React.MouseEvent<HTMLButtonElement>) =>{
-		console.log(search)
-
 		navigate("/list/search/"+search);
-		// send("get",`/api/livestock/search/${cookies.currentCode}/${search}/0/32`, "", {}, function(r){
-		// 	console.log(r.data);
-		// });
 	}
 
 	return (

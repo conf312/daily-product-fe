@@ -138,7 +138,6 @@ export const List = () => {
 	const {type2} = useParams();
 	let url;
 	const getData = () => {
-		console.log("type=>", type, "type2=>", type2);
 		if(type === "market-tradition"){
 			if(type2 === undefined){
 				url="/api/livestock/autonomous/"+areaCode+"/1";
@@ -157,7 +156,6 @@ export const List = () => {
 
 		send("get",url, "", {}, function(r){
 			if(r.data.length>0) setData(r.data);
-			console.log(r.data);
 		});
 	}
 
