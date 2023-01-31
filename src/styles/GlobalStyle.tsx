@@ -36,6 +36,7 @@ export const GlobalStyle = createGlobalStyle`
 		text-decoration: none;
 	}
 	button {
+		color: #333;
 		border: none;
 		background: none;
 	}

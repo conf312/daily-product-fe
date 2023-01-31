@@ -8,6 +8,7 @@ import { Layer } from "../components/Layer";
 import iconAlign from "../assets/image/icon__align.png";
 import { send } from "../apis/Api";
 import { BoxInner } from "../styles/GlobalStyle";
+import { Empty } from "../components/Empty";
 
 interface objectType {
 	placeCode?: string;
@@ -140,18 +141,22 @@ export const List = () => {
 	const getData = () => {
 		if(type === "market-tradition"){
 			if(type2 === undefined){
-				url="/api/livestock/autonomous/"+areaCode+"/1";
+				url=`/api/livestock/autonomous/${areaCode}/1`;
 			}else{
-				url="/api/livestock/place/"+areaCode+"/"+type2+"/0/32";
+				url=`/api/livestock/place/${areaCode}/${type2}/0/32`;
 			}
 		}else if(type === "market"){
-			url="/api/livestock/autonomous/"+areaCode+"/2";
+			if(type2 === undefined){
+				url=`/api/livestock/autonomous/${areaCode}/2`;
+			}else{
+				url=`/api/livestock/place/${areaCode}/${type2}/0/32`;
+			}
 		}else if(type === "search"){
 			url=`/api/livestock/search/${areaCode}/${type2}/0/32`;
 		}else{
 			const idx = Number(type?.split("t")[1]);
 			const placeCode= dummyProduct[idx];     
-			url="/api/livestock/product/"+areaCode +"/"+placeCode+"/0/32";   
+			url=`/api/livestock/product/${areaCode}/${placeCode}/0/32`;   
 		}
 
 		send("get",url, "", {}, function(r){
@@ -171,40 +176,44 @@ export const List = () => {
 				<ButtonAlign onClick={openLayerEvent}>정렬</ButtonAlign>
 				<Layer open={open} type={"bottomType"} headTitle="정렬" content={dataArea} closeLayerEvent={closeLayerEvent}/>
 			</BoxSummary>
-			<ListUl>
-				{data.map((item, idx) => {
-					return(
-						<ListItem key={idx}>
-							<NavLink to={
-								type?.indexOf("market") === 0?
-									"/list/" + type +"/" + item.placeCode
-								: "/list/" + type +"/" + item.productName}>
-								<p className="text__title">
-									{type?.indexOf("market") === 0?
-										(type2===undefined?item.placeName:item.productName)
-									: item.productName}
-								</p>
-								{type?.indexOf("market") === -1 || type2!==undefined?
-									<p className="text__price"><span className="text__number">{item.price?.toLocaleString()}</span>원</p>
-									: null
-								}
-								<div className="box__etc">
-									<span>{cookies.currentArea}</span>
-									{type?.indexOf("market") === 0 && type2 === undefined?
-										<span>{type === "1"?"시장":"마트"}</span>
-										:
-										<>
-											<span>{item.placeName}</span>
-											<span>{item.remarks}</span>
-											<span>{item.standard}</span>
-										</>
+			{data.length>0?
+				<ListUl>
+					{data.map((item, idx) => {
+						return(
+							<ListItem key={idx}>
+								<NavLink to={
+									type?.indexOf("market") === 0?
+										"/list/" + type +"/" + item.placeCode
+									: "/list/" + type +"/" + item.productName}>
+									<p className="text__title">
+										{type?.indexOf("market") === 0?
+											(type2===undefined?item.placeName:item.productName)
+										: item.productName}
+									</p>
+									{type?.indexOf("market") === -1 || type2!==undefined?
+										<p className="text__price"><span className="text__number">{item.price?.toLocaleString()}</span>원</p>
+										: null
 									}
-								</div>
-							</NavLink>
-						</ListItem>
-					)
-				})}
-			</ListUl>
+									<div className="box__etc">
+										<span>{cookies.currentArea}</span>
+										{type?.indexOf("market") === 0 && type2 === undefined?
+											<span>{type === "1"?"시장":"마트"}</span>
+											:
+											<>
+												<span>{item.placeName}</span>
+												<span>{item.remarks}</span>
+												<span>{item.standard}</span>
+											</>
+										}
+									</div>
+								</NavLink>
+							</ListItem>
+						)
+					})}
+				</ListUl>
+				:
+				<Empty title={"검색결과가 없습니다."} text={"다른 검색어를 입력해주세요."}/>
+			}
 		</BoxInner>
 	)
 }
